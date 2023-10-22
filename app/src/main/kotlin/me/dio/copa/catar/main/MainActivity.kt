@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
 import me.dio.copa.catar.extensions.observe
+import me.dio.copa.catar.notification.scheduler.extensions.NotificationMatcherWorker
 import me.dio.copa.catar.ui.theme.Copa2022Theme
 
 @AndroidEntryPoint
@@ -31,7 +32,10 @@ class MainActivity : ComponentActivity() {
             when (action) {
                 is MainUiAction.MatchesNotFound -> TODO()
                 MainUiAction.Unexpected -> TODO()
-                else -> {}
+                is MainUiAction.DisableNotification ->
+                    NotificationMatcherWorker.onCancel(applicationContext, action.match)
+                is MainUiAction.EnableNotification ->
+                    NotificationMatcherWorker.onStart(applicationContext, action.match)
             }
         }
     }
