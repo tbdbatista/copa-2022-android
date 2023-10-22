@@ -6,5 +6,5 @@ import javax.inject.Inject
 class EnableNotificationUseCase @Inject constructor(
     private val repository: MatchesRepository
 ) {
-    suspend fun invoke(id: String) : Unit = repository.enableNotificationFor(id)
+    suspend operator fun invoke(id: String) : Unit = repository.enableNotificationFor(id)
 }
