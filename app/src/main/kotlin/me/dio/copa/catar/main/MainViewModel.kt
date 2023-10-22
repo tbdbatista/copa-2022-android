@@ -6,7 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.dio.copa.catar.core.BaseViewModel
+import me.dio.copa.catar.domain.model.Match
 import me.dio.copa.catar.domain.model.MatchDomain
 import me.dio.copa.catar.domain.usecase.GetMatchesUseCase
 import me.dio.copa.catar.remote.NotFoundException
@@ -22,8 +24,8 @@ class MainViewModel @Inject constructor(
         fetchMatches()
     }
 
-    fun fetchMatches() = viewModelScope.launch {
-        getMatchesUseCase.invoke()
+    private fun fetchMatches() = viewModelScope.launch {
+        getMatchesUseCase()
             .flowOn(Dispatchers.Main)
             .catch {
                 when (it) {
@@ -32,11 +34,27 @@ class MainViewModel @Inject constructor(
                     is UnexpectedException ->
                         sendAction(MainUiAction.Unexpected)
                 }
-            }.collect {
+            }.collect { matches ->
                 setState {
                     copy(matches = matches)
                 }
             }
+    }
+
+    fun toggleNotification(match: Match) {
+        viewModelScope.launch {
+            runCatching {
+                withContext(Dispatchers.Main) {
+                    val action = if (match.notificationEnabled) {
+                        MainUiAction.DisableNotification(match)
+                    } else {
+                        MainUiAction.EnableNotification(match)
+                    }
+
+                    sendAction(action)
+                }
+            }
+        }
     }
 }
 
@@ -46,5 +64,7 @@ data class MainUiState(
 
 sealed interface MainUiAction {
     object Unexpected: MainUiAction
-    data class MatchesNotFound(val message: String): MainUiAction
+    data class MatchesNotFound(val message: String) : MainUiAction
+    data class EnableNotification(val match: MatchDomain) : MainUiAction
+    data class DisableNotification(val match: MatchDomain) : MainUiAction
 }
