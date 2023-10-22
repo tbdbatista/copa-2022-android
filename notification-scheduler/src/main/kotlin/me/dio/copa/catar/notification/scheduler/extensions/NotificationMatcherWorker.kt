@@ -27,7 +27,7 @@ class NotificationMatcherWorker(
 
     companion object {
         fun onStart(context: Context, matchDomain: MatchDomain) {
-            val (id, _, _, team1, team2, matchDate) = matchDomain
+            val ( _, _, _, team1, team2, matchDate) = matchDomain
             val initialDelay = Duration.between(LocalDateTime.now(), matchDate).minusMinutes(5)
             val inputData = workDataOf(
                 NOTIFICATION_TITLE_KEY to "Se prepare que o jogo vai começar",
