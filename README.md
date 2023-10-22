@@ -34,9 +34,9 @@ Aqui estão os principais objetivos deste desafio:
    - **notification-scheduler**: Módulo específico para a criação das Notificações via Work Manager.
 
 2. :white_large_square: UseCase
-
-   - Habilitar Notificação: `EnableNotificationUseCase.kt`.
-   - Desabilitar Notificação: `DisableNotificationUseCase.kt`.
+- Buscar lista das partidas: `'GetMatchesUseCase.kt`
+- Habilitar notificação: `EnableNotificationUseCase.kt`
+- Desabilitar notificação: `DisableNotificationUseCase.kt`
 
 3. :white_large_square: ViewModel: 
 
